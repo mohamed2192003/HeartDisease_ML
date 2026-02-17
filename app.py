@@ -10,37 +10,25 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 
 
-# -------------------------------
-# Page Config
-# -------------------------------
 st.set_page_config(
     page_title="Heart Disease Risk Prediction",
     page_icon="❤️",
     layout="wide"
 )
 
-# -------------------------------
-# Load Model Files
-# -------------------------------
+
 model = joblib.load("best_heart_disease_model.pkl")
 scaler = joblib.load("scaler.pkl")
 features = joblib.load("features_columns.pkl")
 
-# -------------------------------
-# Title
-# -------------------------------
+
 st.title("❤️ Heart Disease Risk Prediction (Graduation Project)")
 st.write("Enter patient details in the sidebar, then click **Predict Risk**.")
 
-# -------------------------------
-# Session State (History Table)
-# -------------------------------
+
 if "history" not in st.session_state:
     st.session_state.history = []
 
-# -------------------------------
-# Sidebar Inputs
-# -------------------------------
 st.sidebar.header("🧾 Patient Information")
 
 age = st.sidebar.slider("Age", 30, 85, 55)
@@ -73,10 +61,6 @@ sleep_hours = st.sidebar.slider("Sleep Hours", 4.0, 9.0, 7.0)
 
 predict_btn = st.sidebar.button("🚀 Predict Risk")
 
-
-# -------------------------------
-# Helper: Radar Chart
-# -------------------------------
 def radar_chart(values_dict):
     labels = list(values_dict.keys())
     values = list(values_dict.values())
@@ -98,9 +82,6 @@ def radar_chart(values_dict):
     return fig
 
 
-# -------------------------------
-# Helper: Create PDF Report
-# -------------------------------
 def create_pdf_report(patient_data, risk_percent, risk_level, prediction_class):
     pdf_file = "prediction_report.pdf"
 
@@ -132,9 +113,7 @@ def create_pdf_report(patient_data, risk_percent, risk_level, prediction_class):
     return pdf_file
 
 
-# -------------------------------
-# Main Layout
-# -------------------------------
+
 col1, col2 = st.columns([2, 1])
 
 with col1:
@@ -162,7 +141,6 @@ with col2:
 
     if predict_btn:
 
-        # Prepare Input
         patient_data = {
             "age": age,
             "sex": sex,
@@ -199,7 +177,6 @@ with col2:
         else:
             risk_percent = 0
 
-        # Risk Level Colors
         if risk_percent < 35:
             risk_level = "LOW RISK ✅"
             st.success(risk_level)
@@ -227,7 +204,6 @@ with col2:
             "Risk Level": risk_level
         })
 
-        # PDF Download
         pdf_file = create_pdf_report(patient_data, risk_percent, risk_level, prediction)
         with open(pdf_file, "rb") as f:
             st.download_button(

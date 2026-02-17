@@ -33,15 +33,12 @@ if "date" in x.columns:
     x["date_hour"] = x["date"].dt.hour
     x = x.drop(columns=["date"])
 
-# One-hot encoding
 x = pd.get_dummies(x, drop_first=True)
 
-# Add missing columns
 for col in features:
     if col not in x.columns:
         x[col] = 0
 
-# Keep same order
 x = x[features]
 
 
